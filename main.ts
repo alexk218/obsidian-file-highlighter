@@ -70,6 +70,7 @@ export default class FtaHighlighterPlugin extends Plugin {
 	}
 
 	highlightFiles() {
+		// applies highlights to FTA plugin
 		const ftaElements =
 			document.querySelectorAll<HTMLDivElement>(".oz-nav-file-title");
 		ftaElements.forEach((el) => {
@@ -83,6 +84,7 @@ export default class FtaHighlighterPlugin extends Plugin {
 			}
 		});
 
+		// applies highlights to default Obsidian file tree
 		const defaultTreeElements =
 			document.querySelectorAll<HTMLDivElement>(".nav-file-title");
 		defaultTreeElements.forEach((el) => {
