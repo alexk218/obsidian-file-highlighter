@@ -10,6 +10,8 @@ const DEFAULT_SETTINGS: FtaHighlighterSettings = {
 
 export default class FtaHighlighterPlugin extends Plugin {
 	settings: FtaHighlighterSettings;
+	private observer: MutationObserver;
+	private fileMenuRegistered = false;
 
 	async onload() {
 		console.log("FTA Highlighter loaded");
@@ -20,30 +22,42 @@ export default class FtaHighlighterPlugin extends Plugin {
 		this.highlightFiles();
 
 		// Watch DOM changes (FTA updates dynamically)
-		const observer = new MutationObserver(() => this.highlightFiles());
-		observer.observe(document.body, { childList: true, subtree: true });
+		this.observer = new MutationObserver(() => this.highlightFiles());
+		this.observer.observe(document.body, {
+			childList: true,
+			subtree: true,
+		});
 
-		// Add right-click context menu in FTA
-		this.registerEvent(
-			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
-				if (!file) return;
+		// Add right-click context menu (once)
+		if (!this.fileMenuRegistered) {
+			this.registerEvent(
+				this.app.workspace.on(
+					"file-menu",
+					(menu: Menu, file: TFile) => {
+						if (!file) return;
 
-				menu.addItem((item) =>
-					item
-						.setTitle(
-							this.settings.highlightedFiles.includes(file.path)
-								? "Remove Highlight"
-								: "Highlight File"
-						)
-						.setIcon("star")
-						.onClick(() => this.toggleHighlight(file.path))
-				);
-			})
-		);
+						menu.addItem((item) =>
+							item
+								.setTitle(
+									this.settings.highlightedFiles.includes(
+										file.path
+									)
+										? "Remove Highlight"
+										: "Highlight File"
+								)
+								.setIcon("star")
+								.onClick(() => this.toggleHighlight(file.path))
+						);
+					}
+				)
+			);
+			this.fileMenuRegistered = true;
+		}
 	}
 
 	onunload() {
 		console.log("FTA Highlighter unloaded");
+		this.observer?.disconnect();
 	}
 
 	async loadSettings() {
@@ -70,26 +84,26 @@ export default class FtaHighlighterPlugin extends Plugin {
 	}
 
 	highlightFiles() {
-		// applies highlights to FTA plugin
+		// Apply highlights to FTA plugin
 		const ftaElements =
 			document.querySelectorAll<HTMLDivElement>(".oz-nav-file-title");
 		ftaElements.forEach((el) => {
 			const filePath = el.getAttribute("data-path");
 			if (!filePath) return;
 
-			if (this.settings.highlightedFiles.includes(filePath)) {
-				el.classList.add("fta-highlighted");
-			} else {
-				el.classList.remove("fta-highlighted");
-			}
+			el.classList.toggle(
+				"fta-highlighted",
+				this.settings.highlightedFiles.includes(filePath)
+			);
 		});
 
-		// applies highlights to default Obsidian file tree
+		// Apply highlights to default Obsidian file tree
 		const defaultTreeElements =
 			document.querySelectorAll<HTMLDivElement>(".nav-file-title");
 		defaultTreeElements.forEach((el) => {
 			const filePath = el.getAttribute("data-path");
 			if (!filePath) return;
+
 			el.classList.toggle(
 				"fta-highlighted",
 				this.settings.highlightedFiles.includes(filePath)
