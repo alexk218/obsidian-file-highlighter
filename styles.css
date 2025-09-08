@@ -1,0 +1,15 @@
+/* Highlighted file in both FTA and default tree */
+.oz-nav-file-title.fta-highlighted,
+.nav-file-title.fta-highlighted {
+	background-color: rgba(255, 230, 0, 0.25) !important;
+	font-weight: bold !important;
+	border-radius: 4px !important;
+}
+
+/* Highlighted file when active in both trees */
+.oz-nav-file.is-active
+	.oz-nav-file-title.fta-highlighted
+	.oz-nav-file-title-content,
+.nav-file-title.is-active.fta-highlighted {
+	background-color: rgba(255, 200, 0, 0.4) !important;
+}

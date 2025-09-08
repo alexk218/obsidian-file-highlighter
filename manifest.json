@@ -1,0 +1,10 @@
+{
+	"id": "fta-highlighter",
+	"name": "FTA Highlighter",
+	"version": "1.0.0",
+	"minAppVersion": "1.1.0",
+	"description": "Add right-click highlighting to File Tree Alternative files.",
+	"author": "Alex",
+	"authorUrl": "",
+	"isDesktopOnly": false
+}
