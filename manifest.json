@@ -1,10 +1,10 @@
 {
-	"id": "fta-highlighter",
-	"name": "FTA Highlighter",
+	"id": "file-highlighter",
+	"name": "File Highlighter",
 	"version": "1.0.0",
 	"minAppVersion": "1.1.0",
-	"description": "Add right-click highlighting to File Tree Alternative files.",
-	"author": "Alex",
+	"description": "Add right-click highlighting to files in Obsidian file tree & File Tree Alternative plugin.",
+	"author": "alexk218",
 	"authorUrl": "",
 	"isDesktopOnly": false
 }
